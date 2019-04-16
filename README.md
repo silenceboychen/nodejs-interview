@@ -838,14 +838,18 @@
 	    function(){ ... },
 	    function(){ ... }
 	], callback);
-async.series串行执行完多个函数后，调用结束函数
-	async.series([
+  ```
+
+  2、`async.series`串行执行完多个函数后，调用结束函数
+	
+  ```
+  async.series([
 	    function(){ ... },
 	    function(){ ... }
 	]);
 	```
 	
-	2、``async.waterfall``依次执行多个函数，后一个函数以前面函数的结果作为输入参数
+	3、``async.waterfall``依次执行多个函数，后一个函数以前面函数的结果作为输入参数
 	
 	```
 	async.waterfall([
@@ -865,7 +869,7 @@ async.series串行执行完多个函数后，调用结束函数
 	});
 	```
 	
-	3、``async.map``异步执行多个数组，返回结果数组
+	4、``async.map``异步执行多个数组，返回结果数组
 	
 	```
 	async.map(['file1','file2','file3'], fs.stat, function(err, results){
@@ -873,7 +877,7 @@ async.series串行执行完多个函数后，调用结束函数
 	});
 	```
 	
-	4、``async.filter``异步过滤多个数组，返回结果数组
+	5、``async.filter``异步过滤多个数组，返回结果数组
 	
 	```
 	async.filter(['file1','file2','file3'], fs.exists, function(results){
