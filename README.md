@@ -6,6 +6,7 @@
 
 * [nodejs面试题](nodejs.md)
 * [javascript面试题](javascript.md)
+* [javascript难题](https://github.com/silenceboychen/javascript-puzzlers)
 * [mysql面试题](mysql.md)
 * [redis面试题](redis.md)
 * [http面试题](http.md)
