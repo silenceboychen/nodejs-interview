@@ -1,5 +1,4 @@
-# nodejs-interview
-
+## nodejs面试题整理
 
 * **什么是错误优先的回调函数？**
 
@@ -519,6 +518,25 @@
 	}); // 接收事件，并打印到控制台
 	em.emit('hello', 'EventEmitter传递消息真方便!');
 	```
+	
+	使用ES6语法：
+	
+	```
+	const EventEmitter = require('events');
+
+	class MyStream extends EventEmitter {
+	  write(data) {
+	    this.emit('data', data);
+	  }
+	}
+	
+	const stream = new MyStream();
+	
+	stream.on('data', (data) => {
+	  console.log(`接收的数据："${data}"`);
+	});
+	stream.write('使用 ES6');
+	```
 
 ---
 
@@ -838,18 +856,18 @@
 	    function(){ ... },
 	    function(){ ... }
 	], callback);
-  ```
-
-  2、`async.series`串行执行完多个函数后，调用结束函数
+	```
 	
-  ```
-  async.series([
+	async.series串行执行完多个函数后，调用结束函数
+	
+	```
+	async.series([
 	    function(){ ... },
 	    function(){ ... }
 	]);
 	```
 	
-	3、``async.waterfall``依次执行多个函数，后一个函数以前面函数的结果作为输入参数
+	2、``async.waterfall``依次执行多个函数，后一个函数以前面函数的结果作为输入参数
 	
 	```
 	async.waterfall([
@@ -869,7 +887,7 @@
 	});
 	```
 	
-	4、``async.map``异步执行多个数组，返回结果数组
+	3、``async.map``异步执行多个数组，返回结果数组
 	
 	```
 	async.map(['file1','file2','file3'], fs.stat, function(err, results){
@@ -877,7 +895,7 @@
 	});
 	```
 	
-	5、``async.filter``异步过滤多个数组，返回结果数组
+	4、``async.filter``异步过滤多个数组，返回结果数组
 	
 	```
 	async.filter(['file1','file2','file3'], fs.exists, function(results){
@@ -1285,14 +1303,6 @@
 	libuv是一个高性能的，事件驱动的I/O库，并且提供了跨平台（如windows, linux）的API。libuv强制使用异步的，事件驱动的编程风格。它的核心工作是提供一个event-loop，还有基于I/O和其它事件通知的回调函数。
 
 	nodejs使用libuv监听各种异步事件
-
----
-
-* **node的优势**
-
-	1. 单线程
-	2. 非阻塞IO
-	3. 事件驱动
 
 ---
 
