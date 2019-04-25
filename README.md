@@ -14,6 +14,6 @@
 
 如果你觉得这些内容帮助到了你，欢迎打赏：
 
-支付宝：![](./images/alipayimg.jpeg)
+支付宝：![](./images/alipay.png)
 
-微信：![](./images/wechatpayimg.jpeg)
+微信：![](./images/wechatpay.png)
