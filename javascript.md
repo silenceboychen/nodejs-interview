@@ -22,6 +22,7 @@
 * [手写一个JS深拷贝](#手写一个JS深拷贝)
 * [手写一个instanceof](#手写一个instanceof)
 * [实现一个JSON.stringify](#实现一个JSONstringify)
+* [实现sleep函数](#实现sleep函数)
 
 
 ### ES6有哪些新特性
@@ -636,4 +637,32 @@ function jsonStringify(obj) {
 jsonStringify({x : 5}) // "{"x":5}"
 jsonStringify([1, "false", false]) // "[1,"false",false]"
 jsonStringify({b: undefined}) // "{"b":"undefined"}"
+```
+
+
+### 实现sleep函数
+
+要求用法：
+	
+```
+/**
+- 使当前运行的异步操作（promise 或者 async）停止等待若干秒
+- 
+- @param ms */
+(async () => {
+    console.log('hello')
+    await sleep(2000) // 等待两秒
+    console.log('world')
+})()
+```
+
+```
+const sleep = (ms) => {
+    new Promise(resolve, reject) {
+    setTimeOut(() => {
+        resolve();
+    }, ms)
+    }
+}
+
 ```
