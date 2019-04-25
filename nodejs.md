@@ -36,6 +36,21 @@
 * [实现一个简单的http服务器?](#实现一个简单的http服务器)
 * [为什么需要child-process?](#为什么需要child-process)
 * [exec, execFile, spawn和fork都是做什么用的?](#exec-execFile-spawn和fork都是做什么用的)
+* [实现一个简单的命令行交互程序?](#实现一个简单的命令行交互程序)
+* [两个node程序之间怎样交互?](#两个node程序之间怎样交互)
+* [怎样让一个js文件变得像linux命令一样可执行?](#怎样让一个js文件变得像linux命令一样可执行)
+* [child-process和process的stdin, stdout, stderror是一样的吗?](child-process和process的stdin-stdout-stderror是一样的吗)
+* [node中的异步和同步怎么理解?](#node中的异步和同步怎么理解)
+* [有哪些方法可以进行异步流程的控制?](#有哪些方法可以进行异步流程的控制)
+* [怎样绑定node程序到80端口?](#怎样绑定node程序到80端口)
+* [有哪些方法可以让node程序遇到错误后自动重启?](#有哪些方法可以让node程序遇到错误后自动重启)
+* [怎样充分利用多个CPU?](怎样充分利用多个CPU)
+* [怎样调节node执行单元的内存大小?](#怎样调节node执行单元的内存大小)
+* [程序总是崩溃，怎样找出问题在哪里?](#程序总是崩溃怎样找出问题在哪里)
+* [有哪些常用方法可以防止程序崩溃?](#有哪些常用方法可以防止程序崩溃)
+* [怎样调试node程序?](#怎样调试node程序)
+* [如何捕获NodeJS中的错误，有几种方法?](#如何捕获NodeJS中的错误有几种方法)
+* [async都有哪些常用方法，分别是怎么用?](#async都有哪些常用方法分别是怎么用)
 
 
 ### 什么是错误优先的回调函数？
@@ -359,9 +374,166 @@ http.createServer(function(req, res) {
 3. ``spawn``是流式和操作系统进行交互; 
 4. ``fork``是两个``node``程序(``javascript``)之间时行交互.
 
+### 实现一个简单的命令行交互程序?
 
 
+```
+var cp = require('child_process');
+
+var child = cp.spawn('echo', ['你好', "钩子"]); // 执行命令
+child.stdout.pipe(process.stdout); // child.stdout是输入流，process.stdout是输出流
+// 这句的意思是将子进程的输出作为当前程序的输入流，然后重定向到当前程序的标准输出，即控制台
+```
 
 
+### 两个node程序之间怎样交互?
+
+使用``child_process``的``fork``．原理是子程序用``process.on``, ``process.send``，父程序里用``child.on``,``child.send``进行交互.
+	
+```
+1) fork-parent.js
+var cp = require('child_process');
+var child = cp.fork('./fork-child.js');
+child.on('message', function(msg){
+	console.log('老爸从儿子接受到数据:', msg);
+});
+child.send('我是你爸爸，送关怀来了!');
+
+2) fork-child.js
+process.on('message', function(msg){
+	console.log("儿子从老爸接收到的数据:", msg);
+	process.send("我不要关怀，我要银民币！");
+});
+```
+
+### 怎样让一个js文件变得像linux命令一样可执行?
+
+1. 在``myCommand.js``文件头部加入 ``#!/usr/bin/env node`` 
+2. ``chmod``命令把js文件改为可执行即可 
+3. 进入文件目录，命令行输入``myComand``就是相当于``node myComand.js``了
+
+
+### child-process和process的stdin, stdout, stderror是一样的吗?
+
+概念都是一样的，输入，输出，错误，都是流．区别是在父程序眼里，子程序的``stdout``是输入流，``stdin``是输出流．
+
+
+### node中的异步和同步怎么理解?
+
+node是单线程的，异步是通过一次次的循环事件队列来实现的．同步则是说阻塞式的IO,这在高并发环境会是一个很大的性能问题，所以同步一般只在基础框架的启动时使用，用来加载配置文件，初始化程序什么的．
+
+
+### 有哪些方法可以进行异步流程的控制?
+
+1. 多层嵌套回调 
+2. 为每一个回调写单独的函数，函数里边再回调 
+3. 用第三方框架比方``async, q, promise``等
+
+
+### 怎样绑定node程序到80端口?
+
+1. ``sudo`` 
+2. ``apache/nginx``代理 
+3. 用操作系统的``firewall iptables``进行端口重定向
+
+### 有哪些方法可以让node程序遇到错误后自动重启?
+
+1. ``runit`` 
+2. ``forever`` 
+3. ``nohup npm start &``
+4. ``docker`
+
+### 怎样充分利用多个CPU?
+
+一个CPU运行一个node实例
+
+### 怎样调节node执行单元的内存大小?
+
+用``--max-old-space-size`` 和 ``--max-new-space-size`` 来设置 v8 使用内存的上限
+
+### 程序总是崩溃，怎样找出问题在哪里?
+
+1. ``node --prof`` 查看哪些函数调用次数多 
+2. ``memwatch``和``heapdump``获得内存快照进行对比，查找内存溢出
+
+### 有哪些常用方法可以防止程序崩溃?
+
+1. ``try-catch-finally`` 
+2. ``EventEmitter/Stream error``事件处理 
+3. ``domain``统一控制 
+4. ``jshint``静态检查 
+5. ``jasmine/mocha``进行单元测试
+
+### 怎样调试node程序?
+
+``node --debug app.js`` 和``node-inspector``
+
+
+### 如何捕获NodeJS中的错误，有几种方法?
+
+1. 监听错误事件``req.on('error', function(){})``, 适用``EventEmitter``存在的情况; 
+2. ``Promise.then.catch(error)``,适用``Promise``存在的情况 
+3. ``try-catch``,适用``async-await``和``js``运行时异常，比如``undefined object``
+4. `process.on('unhandledRejection', (reason, promise) => ···)`;
+
+
+### async都有哪些常用方法，分别是怎么用?
+
+
+``async``是一个js类库，它的目的是解决js中异常流程难以控制的问题．``async``不仅适用在node.js里，浏览器中也可以使用．
+	
+1、``async.parallel``并行执行完多个函数后，调用结束函数
+
+```
+async.parallel([
+    function(){ ... },
+    function(){ ... }
+], callback);
+```
+
+async.series串行执行完多个函数后，调用结束函数
+
+```
+async.series([
+    function(){ ... },
+    function(){ ... }
+]);
+```
+
+2、``async.waterfall``依次执行多个函数，后一个函数以前面函数的结果作为输入参数
+
+```
+async.waterfall([
+    function(callback) {
+        callback(null, 'one', 'two');
+    },
+    function(arg1, arg2, callback) {
+      // arg1 now equals 'one' and arg2 now equals 'two'
+        callback(null, 'three');
+    },
+    function(arg1, callback) {
+        // arg1 now equals 'three'
+        callback(null, 'done');
+    }
+], function (err, result) {
+    // result now equals 'done'
+});
+```
+
+3、``async.map``异步执行多个数组，返回结果数组
+
+```
+async.map(['file1','file2','file3'], fs.stat, function(err, results){
+    // results is now an array of stats for each file
+});
+```
+
+4、``async.filter``异步过滤多个数组，返回结果数组
+
+```
+async.filter(['file1','file2','file3'], fs.exists, function(results){
+    // results now equals an array of the existing files
+});
+```
 
 
