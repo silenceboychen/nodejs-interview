@@ -1,7 +1,7 @@
 ## Redis面试题整理
 
 
-* [redis 简介](#redis 简介)
+* [redis简介](#redis简介)
 * [redis支持的数据类型以及使用场景分析](#redis支持的数据类型以及使用场景分析)
 * [为什么要用 redis/为什么要用缓存](#为什么要用redis为什么要用缓存)
 * [redis和memcached的区别](#redis和memcached的区别)
@@ -12,7 +12,7 @@
 * [如何解决Redis的并发竞争Key问题](#如何解决Redis的并发竞争Key问题)
 
 
-### redis 简介
+### redis简介
 
 简单来说 redis 就是一个非关系型数据库，不过与传统数据库不同的是 redis 的数据是存在内存中的，所以存写速度非常快，因此 redis 被广泛应用于缓存方向。另外，redis 也经常用来做分布式锁。redis 提供了多种数据类型来支持不同的业务场景。除此之外，redis 支持事务 、持久化、LUA脚本、LRU驱动事件、多种集群方案。
 
