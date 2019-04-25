@@ -29,8 +29,13 @@
 * [实现一个Writable Stream?](#实现一个Writable-Stream)
 * [内置的fs模块架构是什么样子的?](#内置的fs模块架构是什么样子的)
 * [读写一个文件有多少种方法?](#读写一个文件有多少种方法)
-* [fs.watch和fs.watchFile有什么区别，怎么应用?](#fs.watch和fs.watchFile有什么区别怎么应用)
-* [怎么读取json配置文件?](怎么读取json配置文件)
+* [fs.watch和fs.watchFile有什么区别，怎么应用?](#fswatch和fswatchFile有什么区别怎么应用)
+* [怎么读取json配置文件?](#怎么读取json配置文件)
+* [node的网络模块架构是什么样子的?](#node的网络模块架构是什么样子的)
+* [node是怎样支持https,tls的?](#node是怎样支持https-tls的)
+* [实现一个简单的http服务器?](#实现一个简单的http服务器)
+* [为什么需要child-process?](#为什么需要child-process)
+* [exec, execFile, spawn和fork都是做什么用的?](#exec-execFile-spawn和fork都是做什么用的)
 
 
 ### 什么是错误优先的回调函数？
@@ -316,7 +321,43 @@ fs模块主要由下面几部分组成:
 主要有两种方式，第一种是利用``node``内置的``require('data.json')``机制，直接得到js对象; 第二种是读入文件入内容，然后用``JSON.parse(content)``转换成js对象．二者的区别是``require``机制情况下，如果多个模块都加载了同一个json文件，那么其中一个改变了js对象，其它跟着改变，这是由``node``模块的缓存机制造成的，只有一个js模块对象; 第二种方式则可以随意改变加载后的js变量，而且各模块互不影响，因为他们都是独立的，是多个js对象.
 
 
+### node的网络模块架构是什么样子的?
 
+
+``node``全面支持各种网络服务器和客户端，包括``tcp``, ``http/https``, ``tcp``, ``udp``, ``dns``, ``tls/ssl``等.
+
+### node是怎样支持https, tls的?
+
+主要实现以下几个步骤即可: 
+
+1. openssl生成公钥私钥 
+2. 服务器或客户端使用https替代http 
+3. 服务器或客户端加载公钥私钥证书
+
+
+### 实现一个简单的http服务器?
+
+
+```
+var http = require('http'); // 加载http模块
+
+http.createServer(function(req, res) {
+	res.writeHead(200, {'Content-Type': 'text/html'}); // 200代表状态成功, 文档类型是给浏览器识别用的
+	res.write('<meta charset="UTF-8"> <h1>我是标题啊！</h1> <font color="red">hello world</font>'); // 返回给客户端的html数据
+	res.end(); // 结束输出流
+}).listen(3000); // 绑定3000, 查看效果请访问 http://localhost:3000
+```
+
+### 为什么需要child-process?
+
+``node``是异步非阻塞的，这对高并发非常有效．可是我们还有其它一些常用需求，比如和操作系统``shell``命令交互，调用可执行文件，创建子进程进行阻塞式访问或高CPU计算等，``child-process``就是为满足这些需求而生的．``child-process``顾名思义，就是把``node``阻塞的工作交给子进程去做．
+
+### exec, execFile, spawn和fork都是做什么用的?
+
+1. ``exec``可以用操作系统原生的方式执行各种命令，如管道 ``cat ab.txt | grep hello``; 
+2. ``execFile``是执行一个文件; 
+3. ``spawn``是流式和操作系统进行交互; 
+4. ``fork``是两个``node``程序(``javascript``)之间时行交互.
 
 
 

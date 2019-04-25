@@ -342,51 +342,6 @@
 
 ---
 
-
-* **node的网络模块架构是什么样子的?**
-
-	``node``全面支持各种网络服务器和客户端，包括``tcp``, ``http/https``, ``tcp``, ``udp``, ``dns``, ``tls/ssl``等.
-	
----
-
-* **node是怎样支持``https``,``tls``的?**
-
-	主要实现以下几个步骤即可: 
-	1. openssl生成公钥私钥 
-	2. 服务器或客户端使用https替代http 
-	3. 服务器或客户端加载公钥私钥证书
-
----
-
-* **实现一个简单的``http``服务器?**
-
-	```
-	var http = require('http'); // 加载http模块
-
-	http.createServer(function(req, res) {
-		res.writeHead(200, {'Content-Type': 'text/html'}); // 200代表状态成功, 文档类型是给浏览器识别用的
-		res.write('<meta charset="UTF-8"> <h1>我是标题啊！</h1> <font color="red">hello world</font>'); // 返回给客户端的html数据
-		res.end(); // 结束输出流
-	}).listen(3000); // 绑定3000, 查看效果请访问 http://localhost:3000
-	```
-	
----
-
-* **为什么需要``child-process``?**
-
-	``node``是异步非阻塞的，这对高并发非常有效．可是我们还有其它一些常用需求，比如和操作系统``shell``命令交互，调用可执行文件，创建子进程进行阻塞式访问或高CPU计算等，``child-process``就是为满足这些需求而生的．``child-process``顾名思义，就是把``node``阻塞的工作交给子进程去做．
-	
----
-
-* **``exec``,``execFile``,``spawn``和``fork``都是做什么用的?**
-
-	1. ``exec``可以用操作系统原生的方式执行各种命令，如管道 ``cat ab.txt | grep hello``; 
-	2. ``execFile``是执行一个文件; 
-	3. ``spawn``是流式和操作系统进行交互; 
-	4. ``fork``是两个``node``程序(``javascript``)之间时行交互.
-
----
-
 * **实现一个简单的命令行交互程序?**
 
 	```
