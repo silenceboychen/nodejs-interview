@@ -23,6 +23,7 @@
 * [手写一个instanceof](#手写一个instanceof)
 * [实现一个JSON.stringify](#实现一个JSONstringify)
 * [实现sleep函数](#实现sleep函数)
+* [在JavaScript中,(a==1 && a==2 && a==3)是否有可能为true?](#在JavaScript中a1--a2--a==3是否有可能为true)
 * [变量对象与活动对象](#变量对象与活动对象)
 
 
