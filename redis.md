@@ -143,7 +143,7 @@ Redis不同于Memcached的很重一点就是，Redis支持持久化，而且支�
 * 快照（snapshotting）持久化（RDB）
 
 	Redis可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。Redis创建快照之后，可以对快照进行备份，可以将快照复制到其他服务器从而创建具有相同数据的服务器副本（Redis主从结构，主要用来提高Redis性能），还可以将快照留在原地以便重启服务器的时候使用。快照持久化是Redis默认采用的持久化方式。
-	
+
 * AOF（append-only file）持久化
 
 	与快照持久化相比，AOF持久化 的实时性更好，因此已成为主流的持久化方案。默认情况下Redis没有开启AOF（append only file）方式的持久化，可以通过appendonly参数开启：
