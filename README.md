@@ -12,6 +12,7 @@
 * [http面试题](http.md)
 * [mongo面试题](mongo.md)
 * [git面试题](git.md)
+* [面试技巧](skill.md)
 
 ### Support
 
