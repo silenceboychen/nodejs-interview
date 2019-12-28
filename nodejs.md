@@ -68,6 +68,7 @@
 * [浏览器与Node的事件循环有何区别?](#浏览器与Node的事件循环有何区别)
 * [Nodejs中定时功能的顺序是怎样的？](#Nodejs中定时功能的顺序是怎样的)
 * [process.nextTick与setTimeout递归调用区别？](#processnextTick与setTimeout递归调用区别)
+* [什么是 EventLoop（事件循环）？](#什么是EventLoop事件循环)
 
 
 ### 什么是错误优先的回调函数？
@@ -830,3 +831,7 @@ setImmediate(() => {
     console.log('setImmediate');
 })
 ```
+
+### 什么是 EventLoop（事件循环）？
+
+总结起来一句话概括，事件轮询是 JS 实现异步的具体解决方案，同步代码直接执行，异步函数或代码块先放在异步队列中，待同步函数执行完毕，轮询执行异步队列的函数。
