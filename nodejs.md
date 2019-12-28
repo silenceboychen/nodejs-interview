@@ -66,6 +66,8 @@
 * [V8内存限制](#V8内存限制)
 * [V8的堆构成](#V8的堆构成)
 * [浏览器与Node的事件循环有何区别?](#浏览器与Node的事件循环有何区别)
+* [Nodejs中定时功能的顺序是怎样的？](#Nodejs中定时功能的顺序是怎样的)
+* [process.nextTick与setTimeout递归调用区别？](#process.nextTick与setTimeout递归调用区别)
 
 
 ### 什么是错误优先的回调函数？
@@ -770,3 +772,61 @@ V8的堆其实并不只是由老生代和新生代两部分构成，可以将堆
 
 这个内容介绍起来比较多，这篇文章讲解的非常详细：[浏览器与Node的事件循环(Event Loop)有何区别?](https://blog.fundebug.com/2019/01/15/diffrences-of-browser-and-node-in-event-loop/)
 
+### Nodejs中定时功能的顺序是怎样的？
+
+Node.js 的定时器模块提供了在一段时间之后执行一些函数的功能。
+
+* setTimeout/clearTimeout - 用于在指定的毫秒数后执行代码块（仅执行一次）
+* setInterval/clearInterval - 用于在指定的毫秒数后循环执行代码块（循环执行）
+* setImmediate/clearImmediate - 在当前事件循环周期结束后执行代码块
+* process.nextTick - 在当前执行栈尾部，Event-Loop 之前触发
+
+timer 的执行顺序
+
+```
+process.nextTick > setImmidate > setTimeout / SetInterval
+```
+
+### process.nextTick与setTimeout递归调用区别？
+
+`process.nextTick` 属于微任务，是在当前执行栈的尾部，`Event Loop` 之前触发，下面两个都是递归调用，`test1` 中 `process.nextTick` 是在当前执行栈调用，是一次性执行完，相当于 `while(true){}`，主线程陷入了死循环，阻断 IO 操作。
+
+`test2` 方法中，`setTimeout` 属于宏任务，在任务队列中同样也是递归，但是它并不是一次性的执行而是会多次 `Event Loop`，不会阻断 IO 操作，另外注意 `setTimeout` 有一个最小的时间 4ms。
+
+```
+function test1() {
+    process.nextTick(() => test());
+}
+
+function test2() {
+    setTimeout(() => test(), 0);
+}
+```
+
+`process.nextTick` 将会阻塞 `IO`，`setImmediate` 不会输出
+
+```
+function test() {
+    return process.nextTick(() => test());
+}
+
+test();
+
+setImmediate(() => {
+    console.log('setImmediate');
+})
+```
+
+下面使用 `setTimeout` 不会造成 `IO` 阻塞，会输出 `setImmediate`
+
+```
+function test() { 
+    setTimeout(() => test(), 0);
+}
+
+test()
+
+setImmediate(() => {
+    console.log('setImmediate');
+})
+```
